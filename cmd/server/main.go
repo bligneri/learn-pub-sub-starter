@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -17,4 +19,9 @@ func main() {
 		return
 	}
 	defer con.Close()
+
+	// wait for ctrl+c
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, os.Interrupt)
+	<-signalChan
 }
